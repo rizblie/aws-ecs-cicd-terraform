@@ -32,8 +32,10 @@ resource "aws_iam_policy" "codepipeline_policy" {
   "Statement": [
     {
       "Action": [
-        "s3:GetObject", "s3:GetObjectVersion", "s3:PutObject",
-        "s3:GetBucketVersioning"
+        "s3:GetObject", "s3:GetObjectVersion",
+        "s3:PutObject",
+        "s3:GetBucketVersioning",
+        "s3:PutObjectAcl"
       ],
       "Effect": "Allow",
       "Resource": "${aws_s3_bucket.artifact_bucket.arn}/*"
@@ -56,11 +58,12 @@ resource "aws_iam_policy" "codepipeline_policy" {
     },
     {
       "Action": [
-          "codestar-connections:UseConnection"
+          "codestar-connections:UseConnection",
+          "codestar-connections:StartUploadArchiveToS3",
+          "codestar-connections:GetUploadArchiveToS3Status"
       ],
-        "Resource": "*",
-        "Effect": "Allow"
-      }
+      "Resource": "*",
+      "Effect": "Allow"
     }
   ]
 }
@@ -84,8 +87,7 @@ resource "aws_codestarconnections_connection" "github-connection" {
 
 resource "aws_codepipeline" "pipeline" {
   depends_on = [
-    aws_codebuild_project.codebuild,
-    aws_codecommit_repository.source_repo
+    aws_codebuild_project.codebuild
   ]
   name     = "${var.project_name}-${var.source_repo_branch}-Pipeline"
   role_arn = aws_iam_role.codepipeline_role.arn

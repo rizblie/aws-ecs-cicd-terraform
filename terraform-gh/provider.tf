@@ -3,33 +3,17 @@
 # ---------------------------------------------------------------------------------------------------------------------
 
 terraform {
-  required_version = "~>0.12"
+  required_version = "~>1.0"
+  required_providers {
+    aws = {
+      version = ">= 2.7.0"
+      source = "hashicorp/aws"
+    }
+  }
 }
 
 
 provider "aws" {
-  version = "~> 2.25"
   region  = var.aws_region
   profile = var.aws_profile
 }
-
-# ---------------------------------------------------------------------------------------------------------------------
-# AWS PROVIDER USING TF CLI
-# ---------------------------------------------------------------------------------------------------------------------
-
-# provider "aws" {
-#   profile = "default-ecs"
-#   version = "~> 2.25"
-#   region  = "${var.aws_region}"
-# }
-
-# terraform {
-#   required_version = "~>0.12"
-#   backend "remote" {
-#     organization = "aws-isv"
-
-#     workspaces {
-#       name = "petclinic-fargate"
-#     }
-#   }
-# }

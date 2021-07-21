@@ -79,10 +79,9 @@ resource "aws_iam_role_policy_attachment" "codebuild-attach" {
 
 resource "aws_codebuild_project" "codebuild" {
   depends_on = [
-    aws_codecommit_repository.source_repo,
     aws_ecr_repository.image_repo
   ]
-  name          = "codebuild-${var.source_repo_name}-${var.source_repo_branch}"
+  name          = "codebuild-${var.project_name}-${var.source_repo_branch}"
   service_role  = aws_iam_role.codebuild_role.arn
   artifacts {
     type = "CODEPIPELINE"
